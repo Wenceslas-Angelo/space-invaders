@@ -10,6 +10,7 @@ class Player {
   constructor(canvasSize) {
     this.velocity = { x: 0, y: 0 };
     this.rotation = 0;
+    this.opacity = 1;
     const image = new Image();
     image.src = playerImage;
     image.onload = () => {
@@ -30,6 +31,7 @@ class Player {
    */
   draw(context) {
     context.save();
+    context.globalAlpha = this.opacity;
     context.translate(
       this.position.x + this.width / 2,
       this.position.y + this.height / 2
