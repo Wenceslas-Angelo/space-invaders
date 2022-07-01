@@ -5,6 +5,7 @@ import GridInvader from './GridInvader';
 import Particle from './Particle';
 
 // constants
+const scoreHtml = document.querySelector('#score span');
 const container = document.querySelector('.container');
 const btnPlay = document.querySelector('.modal');
 const canvas = document.querySelector('canvas');
@@ -39,6 +40,7 @@ let game = {
   over: false,
   active: false,
 };
+let score = 0;
 
 for (let i = 0; i < 100; i++) {
   particles.push(
@@ -186,6 +188,8 @@ function gridInvaderAction() {
             );
 
             if (invaderFound && projectileFound) {
+              score += 100;
+              scoreHtml.innerHTML = score;
               // invader explosion
               createParticules({
                 object: invader,
@@ -230,7 +234,7 @@ function init() {
     over: false,
     active: true,
   };
-
+  score = 0;
   for (let i = 0; i < 100; i++) {
     particles.push(
       new Particle({
@@ -318,6 +322,7 @@ document.addEventListener('keyup', (e) => {
 
 btnPlay.addEventListener('click', function () {
   container.classList.remove('active');
+  scoreHtml.innerHTML = 0;
   setTimeout(() => {
     init();
   }, 500);

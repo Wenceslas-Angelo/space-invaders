@@ -43,3 +43,13 @@ body {
   cursor: pointer;
   font-weight: bold;
 }
+
+#score {
+  position: fixed;
+  color: white;
+  font-size: 30px;
+  font-weight: bold;
+  top: 10px;
+  left: 5px;
+  z-index: 100;
+}
