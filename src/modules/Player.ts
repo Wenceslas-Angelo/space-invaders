@@ -1,7 +1,7 @@
 import Game from "./Game";
 import playerImage from "../assets/spaceship.png";
 import createImage from "../utils/createImage";
-import { PLAYER_SCALE } from "../constants";
+import { PLAYER_ROTATION, PLAYER_SCALE } from "../constants";
 
 class Player {
   private game: Game;
@@ -10,6 +10,7 @@ class Player {
   private width: number;
   private height: number;
   private speed: number;
+  private rotation: number;
   private image: HTMLImageElement;
 
   constructor(game: Game) {
@@ -17,7 +18,8 @@ class Player {
     this.image = createImage(playerImage);
     this.x = 0;
     this.y = 0;
-    this.speed = 0;
+    this.speed = 3;
+    this.rotation = 0;
     this.width = 0;
     this.height = 0;
     this.image.onload = () => {
@@ -28,9 +30,28 @@ class Player {
     };
   }
 
+  update() {
+    if (
+      this.game.keys.includes("ArrowRight") &&
+      this.x < this.game.width - this.width
+    ) {
+      this.x += this.speed;
+      this.rotation = PLAYER_ROTATION;
+    } else if (this.game.keys.includes("ArrowLeft") && this.x >= 0) {
+      this.x -= this.speed;
+      this.rotation = -PLAYER_ROTATION;
+    } else {
+      this.rotation = 0;
+    }
+  }
+
   draw(context: CanvasRenderingContext2D) {
-    if (this.image)
-      context.drawImage(this.image, this.x, this.y, this.width, this.height);
+    context.save();
+    context.translate(this.x + this.width / 2, this.y + this.height / 2);
+    context.rotate(this.rotation);
+    context.translate(-this.x - this.width / 2, -this.y - this.height / 2);
+    context.drawImage(this.image, this.x, this.y, this.width, this.height);
+    context.restore();
   }
 }
 
