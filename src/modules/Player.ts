@@ -48,7 +48,7 @@ class Player {
     }
 
     this.projectiles.forEach((projectile, index) => {
-      if (projectile.getY() + projectile.getRadius() <= 0) {
+      if (projectile.markedDeletion()) {
         this.projectiles.splice(index, 1);
       } else {
         projectile.update();

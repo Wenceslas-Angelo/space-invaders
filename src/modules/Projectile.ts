@@ -11,12 +11,8 @@ class Projectile {
     this.speed = 3;
   }
 
-  getY() {
-    return this.y;
-  }
-
-  getRadius() {
-    return this.radius;
+  markedDeletion() {
+    return this.y + this.radius <= 0;
   }
 
   update() {
