@@ -12,6 +12,9 @@ class InputHandler {
       if (keysPressedIsValide && keysArrayIsEmpty) {
         this.game.keys.push(event.key);
       }
+      if (event.key === " ") {
+        this.game.player.shoot();
+      }
     });
 
     document.addEventListener("keyup", (event) => {

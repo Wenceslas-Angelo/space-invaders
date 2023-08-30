@@ -7,6 +7,7 @@ class Game {
   player: Player;
   keys: string[];
   inputHandler: InputHandler;
+
   constructor(width: number, height: number) {
     this.width = width;
     this.height = height;
