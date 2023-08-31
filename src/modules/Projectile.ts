@@ -34,7 +34,7 @@ class Projectile {
   draw(context: CanvasRenderingContext2D) {
     context.beginPath();
     context.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-    context.fillStyle = this.author === "invader" ? "white" : "red";
+    context.fillStyle = this.author === "invader" ? "purple" : "red";
     context.fill();
     context.closePath();
   }

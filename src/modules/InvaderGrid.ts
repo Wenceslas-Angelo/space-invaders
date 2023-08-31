@@ -33,7 +33,7 @@ class InvaderGrid {
     this.speedY = 0;
     if (this.x + this.width >= this.game.width || this.x <= 0) {
       this.speedX = -this.speedX;
-      this.speedY = 30;
+      this.speedY = 10;
     }
     this.x += this.speedX;
     this.y += this.speedY;
@@ -50,6 +50,13 @@ class InvaderGrid {
         .forEach((projectile, indexProjectile) => {
           if (checkCollision(projectile, invader)) {
             this.invaders.splice(index, 1);
+            this.game.createParticles(
+              invader.x,
+              invader.y,
+              invader.width,
+              invader.height,
+              "white"
+            );
             this.game.player.getProjectiles().splice(indexProjectile, 1);
 
             if (this.invaders.length > 0) {
