@@ -1,6 +1,8 @@
 import invaderImage from "../assets/invader.png";
 import { INVADER_SCALE } from "../constants";
 import createImage from "../utils/createImage";
+import Game from "./Game";
+import Projectile from "./Projectile";
 
 class Invader {
   public x: number;
@@ -8,8 +10,10 @@ class Invader {
   public width: number;
   public height: number;
   private image: HTMLImageElement;
+  private projectiles: Projectile[];
+  private game: Game;
 
-  constructor(x: number, y: number) {
+  constructor(x: number, y: number, game: Game) {
     this.image = createImage(invaderImage);
     this.x = x;
     this.y = y;
@@ -19,17 +23,41 @@ class Invader {
       this.width = this.image.width * INVADER_SCALE;
       this.height = this.image.height * INVADER_SCALE;
     };
+    this.projectiles = [];
+    this.game = game;
   }
 
   update(speedX: number, speedY: number) {
     this.x += speedX;
     this.y += speedY;
+
+    this.projectiles.forEach((projectile, index) => {
+      if (projectile.markedDeletion()) {
+        this.projectiles.splice(index, 1);
+      } else {
+        projectile.update();
+      }
+    });
   }
 
-  shoot() {}
+  shoot() {
+    if (this.projectiles.length === 0) {
+      this.projectiles.push(
+        new Projectile(
+          this.x + this.width / 2,
+          this.y + this.height,
+          "invader",
+          this.game
+        )
+      );
+    }
+  }
 
   draw(context: CanvasRenderingContext2D) {
     context.drawImage(this.image, this.x, this.y, this.width, this.height);
+    this.projectiles.forEach((projectile) => {
+      projectile.draw(context);
+    });
   }
 }
 

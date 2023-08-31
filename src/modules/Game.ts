@@ -9,6 +9,8 @@ class Game {
   keys: string[];
   inputHandler: InputHandler;
   gridOfInvaderGrid: InvaderGrid[];
+  frames: number;
+  randomInterval: number;
 
   constructor(width: number, height: number) {
     this.width = width;
@@ -16,14 +18,24 @@ class Game {
     this.player = new Player(this);
     this.keys = [];
     this.inputHandler = new InputHandler(this);
-    this.gridOfInvaderGrid = [new InvaderGrid(this)];
+    this.gridOfInvaderGrid = [];
+    this.frames = 0;
+    this.randomInterval = Math.floor(Math.random() * 500) + 500;
   }
 
   update() {
     this.player.update();
     this.gridOfInvaderGrid.forEach((invaderGrid) => {
-      invaderGrid.update();
+      invaderGrid.update(this.frames);
     });
+
+    if (this.frames % this.randomInterval === 0) {
+      this.gridOfInvaderGrid.push(new InvaderGrid(this));
+      this.randomInterval = Math.floor(Math.random() * 500) + 500;
+      this.frames = 0;
+    }
+
+    this.frames++;
   }
 
   draw(context: CanvasRenderingContext2D) {

@@ -24,18 +24,26 @@ class InvaderGrid {
     this.width = columns * space;
     for (let x = 0; x < columns; x++) {
       for (let y = 0; y < rows; y++) {
-        this.invaders.push(new Invader(x * space, y * space));
+        this.invaders.push(new Invader(x * space, y * space, this.game));
       }
     }
   }
 
-  update() {
+  update(frames: number) {
+    this.speedY = 0;
     if (this.x + this.width >= this.game.width || this.x <= 0) {
       this.speedX = -this.speedX;
-      this.speedY = 10;
+      this.speedY = 30;
     }
     this.x += this.speedX;
     this.y += this.speedY;
+
+    if (frames % 100 === 0 && this.invaders.length > 0) {
+      const randomIndex = Math.floor(Math.random() * this.invaders.length);
+      this.invaders[randomIndex].shoot();
+    }
+
+    debugger;
 
     this.invaders.forEach((invader, index) => {
       invader.update(this.speedX, this.speedY);
@@ -57,7 +65,6 @@ class InvaderGrid {
           }
         });
     });
-    this.speedY = 0;
   }
 
   draw(context: CanvasRenderingContext2D) {

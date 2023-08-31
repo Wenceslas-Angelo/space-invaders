@@ -61,7 +61,9 @@ class Player {
   }
 
   shoot() {
-    this.projectiles.push(new Projectile(this.x + this.width / 2, this.y));
+    this.projectiles.push(
+      new Projectile(this.x + this.width / 2, this.y, "player", this.game)
+    );
   }
 
   draw(context: CanvasRenderingContext2D) {
