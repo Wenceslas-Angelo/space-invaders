@@ -1,6 +1,6 @@
 import Invader from "./Invader";
 import Game from "./Game";
-import invaderIsDead from "../utils/invaderIsDead";
+import checkCollision from "../utils/checkCollision";
 
 class InvaderGrid {
   private game: Game;
@@ -43,14 +43,12 @@ class InvaderGrid {
       this.invaders[randomIndex].shoot();
     }
 
-    debugger;
-
     this.invaders.forEach((invader, index) => {
       invader.update(this.speedX, this.speedY);
       this.game.player
         .getProjectiles()
         .forEach((projectile, indexProjectile) => {
-          if (invaderIsDead(projectile, invader)) {
+          if (checkCollision(projectile, invader)) {
             this.invaders.splice(index, 1);
             this.game.player.getProjectiles().splice(indexProjectile, 1);
 

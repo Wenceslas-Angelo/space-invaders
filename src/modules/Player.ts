@@ -6,10 +6,10 @@ import Projectile from "./Projectile";
 
 class Player {
   private game: Game;
-  private x: number;
-  private y: number;
-  private width: number;
-  private height: number;
+  public x: number;
+  public y: number;
+  public width: number;
+  public height: number;
   private speed: number;
   private rotation: number;
   private image: HTMLImageElement;

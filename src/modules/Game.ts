@@ -11,6 +11,7 @@ class Game {
   gridOfInvaderGrid: InvaderGrid[];
   frames: number;
   randomInterval: number;
+  gameOver: boolean;
 
   constructor(width: number, height: number) {
     this.width = width;
@@ -21,21 +22,24 @@ class Game {
     this.gridOfInvaderGrid = [];
     this.frames = 0;
     this.randomInterval = Math.floor(Math.random() * 500) + 500;
+    this.gameOver = false;
   }
 
   update() {
-    this.player.update();
-    this.gridOfInvaderGrid.forEach((invaderGrid) => {
-      invaderGrid.update(this.frames);
-    });
+    if (!this.gameOver) {
+      this.player.update();
+      this.gridOfInvaderGrid.forEach((invaderGrid) => {
+        invaderGrid.update(this.frames);
+      });
 
-    if (this.frames % this.randomInterval === 0) {
-      this.gridOfInvaderGrid.push(new InvaderGrid(this));
-      this.randomInterval = Math.floor(Math.random() * 500) + 500;
-      this.frames = 0;
+      if (this.frames % this.randomInterval === 0) {
+        this.gridOfInvaderGrid.push(new InvaderGrid(this));
+        this.randomInterval = Math.floor(Math.random() * 500) + 500;
+        this.frames = 0;
+      }
+
+      this.frames++;
     }
-
-    this.frames++;
   }
 
   draw(context: CanvasRenderingContext2D) {

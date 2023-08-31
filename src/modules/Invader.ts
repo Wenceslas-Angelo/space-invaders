@@ -1,6 +1,7 @@
 import invaderImage from "../assets/invader.png";
 import { INVADER_SCALE } from "../constants";
 import createImage from "../utils/createImage";
+import checkCollision from "../utils/checkCollision";
 import Game from "./Game";
 import Projectile from "./Projectile";
 
@@ -32,6 +33,9 @@ class Invader {
     this.y += speedY;
 
     this.projectiles.forEach((projectile, index) => {
+      if (checkCollision(projectile, this.game.player)) {
+        this.game.gameOver = true;
+      }
       if (projectile.markedDeletion()) {
         this.projectiles.splice(index, 1);
       } else {
