@@ -49,6 +49,7 @@ class InvaderGrid {
         .getProjectiles()
         .forEach((projectile, indexProjectile) => {
           if (checkCollision(projectile, invader)) {
+            this.game.score++;
             this.invaders.splice(index, 1);
             this.game.createParticles(
               invader.x,

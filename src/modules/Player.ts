@@ -14,6 +14,7 @@ class Player {
   private rotation: number;
   private image: HTMLImageElement;
   private projectiles: Projectile[];
+  public opacity: number;
 
   constructor(game: Game) {
     this.game = game;
@@ -22,6 +23,7 @@ class Player {
     this.y = 0;
     this.speed = 3;
     this.rotation = 0;
+    this.opacity = 1;
     this.width = 0;
     this.height = 0;
     this.projectiles = [];
@@ -68,6 +70,7 @@ class Player {
 
   draw(context: CanvasRenderingContext2D) {
     context.save();
+    context.globalAlpha = this.opacity;
     context.translate(this.x + this.width / 2, this.y + this.height / 2);
     context.rotate(this.rotation);
     context.translate(-this.x - this.width / 2, -this.y - this.height / 2);

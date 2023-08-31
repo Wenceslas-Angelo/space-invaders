@@ -14,6 +14,8 @@ class Game {
   randomInterval: number;
   gameOver: boolean;
   particles: Particle[];
+  HtmlElScore: HTMLElement | null;
+  score: number;
 
   constructor(width: number, height: number) {
     this.width = width;
@@ -27,6 +29,8 @@ class Game {
     this.gameOver = false;
     this.particles = [];
     this.createBgStar();
+    this.HtmlElScore = document.querySelector("h1 span");
+    this.score = 0;
   }
 
   createBgStar() {
@@ -68,43 +72,43 @@ class Game {
   }
 
   update() {
-    if (!this.gameOver) {
-      this.player.update();
-      this.gridOfInvaderGrid.forEach((invaderGrid) => {
-        invaderGrid.update(this.frames);
-      });
-
-      if (this.frames % this.randomInterval === 0) {
-        this.gridOfInvaderGrid.push(new InvaderGrid(this));
-        this.randomInterval = Math.floor(Math.random() * 500) + 500;
-        this.frames = 0;
+    this.particles.forEach((particle, index) => {
+      if (particle.opacity <= 0) {
+        this.particles.splice(index, 1);
+      } else {
+        particle.update();
       }
-
-      this.particles.forEach((particle, index) => {
-        if (particle.opacity <= 0) {
-          this.particles.splice(index, 1);
-        } else {
-          particle.update();
-        }
-      });
-      this.frames++;
-    }
-
+    });
     this.particles.forEach((particle) => {
       if (particle.y - particle.radius >= this.height) {
         particle.x = Math.random() * this.width;
         particle.y = 0;
       }
     });
+    if (this.gameOver) return;
+    this.HtmlElScore ? (this.HtmlElScore.innerHTML = `${this.score}`) : null;
+    this.player.update();
+    this.gridOfInvaderGrid.forEach((invaderGrid) => {
+      invaderGrid.update(this.frames);
+    });
+
+    if (this.frames % this.randomInterval === 0) {
+      this.gridOfInvaderGrid.push(new InvaderGrid(this));
+      this.randomInterval = Math.floor(Math.random() * 500) + 500;
+      this.frames = 0;
+    }
+
+    this.frames++;
   }
 
   draw(context: CanvasRenderingContext2D) {
+    this.particles.forEach((particle) => {
+      particle.draw(context);
+    });
+    if (this.gameOver) return;
     this.player.draw(context);
     this.gridOfInvaderGrid.forEach((invaderGrid) => {
       invaderGrid.draw(context);
-    });
-    this.particles.forEach((particle) => {
-      particle.draw(context);
     });
   }
 }

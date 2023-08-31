@@ -14,3 +14,13 @@ body {
   height: 100%;
   background-color: black;
 }
+
+.score {
+  padding: 20px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  color: white;
+  font-size: 30px;
+  font-family: sans-serif;
+}
