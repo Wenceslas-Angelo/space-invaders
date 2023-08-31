@@ -3,10 +3,10 @@ import { INVADER_SCALE } from "../constants";
 import createImage from "../utils/createImage";
 
 class Invader {
-  private x: number;
-  private y: number;
-  private width: number;
-  private height: number;
+  public x: number;
+  public y: number;
+  public width: number;
+  public height: number;
   private image: HTMLImageElement;
 
   constructor(x: number, y: number) {

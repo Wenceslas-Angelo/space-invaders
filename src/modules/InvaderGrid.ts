@@ -1,5 +1,6 @@
 import Invader from "./Invader";
 import Game from "./Game";
+import invaderIsDead from "../utils/invaderIsDead";
 
 class InvaderGrid {
   private game: Game;
@@ -36,8 +37,16 @@ class InvaderGrid {
     this.x += this.speedX;
     this.y += this.speedY;
 
-    this.invaders.forEach((invader) => {
+    this.invaders.forEach((invader, index) => {
       invader.update(this.speedX, this.speedY);
+      this.game.player
+        .getProjectiles()
+        .forEach((projectile, indexProjectile) => {
+          if (invaderIsDead(projectile, invader)) {
+            this.invaders.splice(index, 1);
+            this.game.player.getProjectiles().splice(indexProjectile, 1);
+          }
+        });
     });
     this.speedY = 0;
   }

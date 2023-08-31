@@ -1,8 +1,8 @@
 class Projectile {
-  private x: number;
-  private y: number;
+  public x: number;
+  public y: number;
   private speed: number;
-  private radius: number;
+  public radius: number;
 
   constructor(x: number, y: number) {
     this.x = x;

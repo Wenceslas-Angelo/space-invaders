@@ -33,6 +33,10 @@ class Player {
     };
   }
 
+  getProjectiles() {
+    return this.projectiles;
+  }
+
   update() {
     if (
       this.game.keys.includes("ArrowRight") &&
