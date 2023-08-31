@@ -41,16 +41,14 @@ class Invader {
   }
 
   shoot() {
-    if (this.projectiles.length === 0) {
-      this.projectiles.push(
-        new Projectile(
-          this.x + this.width / 2,
-          this.y + this.height,
-          "invader",
-          this.game
-        )
-      );
-    }
+    this.projectiles.push(
+      new Projectile(
+        this.x + this.width / 2,
+        this.y + this.height,
+        "invader",
+        this.game
+      )
+    );
   }
 
   draw(context: CanvasRenderingContext2D) {
