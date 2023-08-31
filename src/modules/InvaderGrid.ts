@@ -45,6 +45,15 @@ class InvaderGrid {
           if (invaderIsDead(projectile, invader)) {
             this.invaders.splice(index, 1);
             this.game.player.getProjectiles().splice(indexProjectile, 1);
+
+            if (this.invaders.length > 0) {
+              const firstInvader = this.invaders[0];
+              const lastInvader = this.invaders[this.invaders.length - 1];
+              this.width = lastInvader.x - firstInvader.x + lastInvader.width;
+              this.x = firstInvader.x;
+            } else {
+              this.game.gridOfInvaderGrid.splice(index, 1);
+            }
           }
         });
     });
