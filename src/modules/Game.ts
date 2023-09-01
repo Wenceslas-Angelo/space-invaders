@@ -4,6 +4,8 @@ import Player from "./Player";
 import Particle from "./Particle";
 import Bombe from "./Bombe";
 import checkCollision, { twoCircleIsCollide } from "../utils/checkCollision";
+import backgroundMusic from "../assets/audio/backgroundMusic.wav";
+import gameOverAudio from "../assets/audio/gameOver.mp3";
 
 class Game {
   width: number;
@@ -20,6 +22,8 @@ class Game {
   bombes: Bombe[];
   elapsedGridTime: number;
   lastSpawnGridTime: number;
+  bgMusic: HTMLAudioElement;
+  gameOverMusic: HTMLAudioElement;
 
   constructor(width: number, height: number) {
     this.width = width;
@@ -39,6 +43,10 @@ class Game {
     this.HtmlElScore = document.querySelector("h1 span");
     this.score = 0;
     this.bombes = [];
+    this.bgMusic = new Audio(backgroundMusic);
+    this.bgMusic.loop = true;
+    this.bgMusic.play();
+    this.gameOverMusic = new Audio(gameOverAudio);
   }
 
   createBgStar() {
@@ -89,6 +97,9 @@ class Game {
     );
     this.player.opacity = 0;
     setTimeout(() => (this.gameDone = true), 5000);
+    this.bgMusic.pause();
+    this.bgMusic.currentTime = 0;
+    this.gameOverMusic.play();
   }
 
   updateParticles() {

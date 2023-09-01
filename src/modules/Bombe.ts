@@ -1,4 +1,5 @@
 import Game from "./Game";
+import audio from "../assets/audio/bomb.mp3";
 
 class Bombe {
   private game: Game;
@@ -7,6 +8,7 @@ class Bombe {
   public radius: number;
   private speedX: number;
   private speedY: number;
+  private explosionSound: HTMLAudioElement;
 
   constructor(game: Game, x: number, y: number, radius: number, speed: number) {
     this.game = game;
@@ -15,6 +17,7 @@ class Bombe {
     this.radius = radius;
     this.speedX = -speed;
     this.speedY = -speed;
+    this.explosionSound = new Audio(audio);
   }
 
   explosion(index: number) {
@@ -26,6 +29,7 @@ class Bombe {
       "yellow"
     );
     this.game.bombes.splice(index, 1);
+    this.explosionSound.play();
   }
 
   update() {

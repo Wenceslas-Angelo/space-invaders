@@ -4,6 +4,7 @@ import createImage from "../utils/createImage";
 import checkCollision from "../utils/checkCollision";
 import Game from "./Game";
 import Projectile from "./Projectile";
+import audio from "../assets/audio/enemyShoot.wav";
 
 class Invader {
   public x: number;
@@ -13,6 +14,7 @@ class Invader {
   private image: HTMLImageElement;
   private projectiles: Projectile[];
   private game: Game;
+  private shootAudio: HTMLAudioElement;
 
   constructor(x: number, y: number, game: Game) {
     this.image = createImage(invaderImage);
@@ -26,6 +28,7 @@ class Invader {
     };
     this.projectiles = [];
     this.game = game;
+    this.shootAudio = new Audio(audio);
   }
 
   dead(invader: this, projectileIndex: number) {
@@ -65,6 +68,7 @@ class Invader {
         this.game
       )
     );
+    this.shootAudio.play();
   }
 
   draw(context: CanvasRenderingContext2D) {
