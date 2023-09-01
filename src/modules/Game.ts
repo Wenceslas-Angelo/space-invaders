@@ -86,7 +86,7 @@ class Game {
     setTimeout(() => (this.gameDone = true), 5000);
   }
 
-  update() {
+  update(deltaTime: number) {
     this.particles.forEach((particle, index) => {
       if (particle.opacity <= 0) {
         this.particles.splice(index, 1);
@@ -101,6 +101,7 @@ class Game {
       }
     });
     if (this.gameDone) return;
+
     this.HtmlElScore ? (this.HtmlElScore.innerHTML = `${this.score}`) : null;
     this.player.update();
     this.gridOfInvaderGrid.forEach((invaderGrid) => {

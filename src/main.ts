@@ -9,13 +9,16 @@ if (canvas) {
 
   const game = new Game(canvas.width, canvas.height);
   if (context) {
-    const animate = () => {
+    let lastTime = 0;
+    const animate = (timestamp: number) => {
+      const deltaTime = timestamp - lastTime;
+      lastTime = timestamp;
       context.clearRect(0, 0, canvas.width, canvas.height);
-      game.update();
+      game.update(deltaTime);
       game.draw(context);
       requestAnimationFrame(animate);
     };
 
-    animate();
+    animate(0);
   }
 }
