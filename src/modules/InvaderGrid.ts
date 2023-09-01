@@ -70,13 +70,12 @@ class InvaderGrid {
 
     // Update or delete invader
     this.invaders.forEach((invader, invaderIndex) => {
+      invader.update(this.speedX, this.speedY);
       this.game.player
         .getProjectiles()
         .forEach((projectile, projectileIndex) => {
           if (checkCollision(projectile, invader)) {
             this.invaderIsDead(invader, invaderIndex, projectileIndex);
-          } else {
-            invader.update(this.speedX, this.speedY);
           }
         });
     });

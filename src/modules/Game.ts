@@ -113,6 +113,22 @@ class Game {
     );
   }
 
+  updateBombes() {
+    this.bombes.forEach((bombe, index) => {
+      bombe.update();
+      this.player.getProjectiles().forEach((projectile, projectileIndex) => {
+        if (twoCircleIsCollide(projectile, bombe)) {
+          bombe.explosion(index);
+          this.player.getProjectiles().splice(projectileIndex, 1);
+          this.score += 1;
+        } else if (checkCollision(bombe, this.player)) {
+          bombe.explosion(index);
+          this.gameOver();
+        }
+      });
+    });
+  }
+
   update(deltaTime: number) {
     this.updateParticles();
     if (this.gameDone) return;
@@ -123,22 +139,7 @@ class Game {
       invaderGrid.update(this.frames);
     });
 
-    this.bombes.forEach((bombe, index) => {
-      this.player.getProjectiles().forEach((projectile, projectileIndex) => {
-        if (twoCircleIsCollide(projectile, bombe)) {
-          bombe.explosion(index);
-          this.player.getProjectiles().splice(projectileIndex, 1);
-          this.score += 1;
-        }
-      });
-
-      if (checkCollision(bombe, this.player)) {
-        bombe.explosion(index);
-        this.gameOver();
-      } else {
-        bombe.update();
-      }
-    });
+    this.updateBombes();
 
     if (this.frames % this.randomInterval === 0) {
       this.gridOfInvaderGrid.push(new InvaderGrid(this));
