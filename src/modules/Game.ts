@@ -2,6 +2,8 @@ import InputHandler from "./InputHandler";
 import InvaderGrid from "./InvaderGrid";
 import Player from "./Player";
 import Particle from "./Particle";
+import Bombe from "./Bombe";
+import checkCollision from "../utils/checkCollision";
 
 class Game {
   width: number;
@@ -12,10 +14,11 @@ class Game {
   gridOfInvaderGrid: InvaderGrid[];
   frames: number;
   randomInterval: number;
-  gameOver: boolean;
+  gameDone: boolean;
   particles: Particle[];
   HtmlElScore: HTMLElement | null;
   score: number;
+  bombes: Bombe[];
 
   constructor(width: number, height: number) {
     this.width = width;
@@ -26,11 +29,12 @@ class Game {
     this.gridOfInvaderGrid = [];
     this.frames = 0;
     this.randomInterval = Math.floor(Math.random() * 500) + 500;
-    this.gameOver = false;
+    this.gameDone = false;
     this.particles = [];
     this.createBgStar();
     this.HtmlElScore = document.querySelector("h1 span");
     this.score = 0;
+    this.bombes = [];
   }
 
   createBgStar() {
@@ -71,6 +75,18 @@ class Game {
     }
   }
 
+  gameOver() {
+    this.createParticles(
+      this.player.x,
+      this.player.y,
+      this.player.width,
+      this.player.height,
+      "white"
+    );
+    this.player.opacity = 0;
+    setTimeout(() => (this.gameDone = true), 5000);
+  }
+
   update() {
     this.particles.forEach((particle, index) => {
       if (particle.opacity <= 0) {
@@ -80,36 +96,57 @@ class Game {
       }
     });
     this.particles.forEach((particle) => {
-      if (particle.y - particle.radius >= this.height) {
+      if (particle.y - particle.radius >= this.height && !particle.fades) {
         particle.x = Math.random() * this.width;
         particle.y = 0;
       }
     });
-    if (this.gameOver) return;
+    if (this.gameDone) return;
     this.HtmlElScore ? (this.HtmlElScore.innerHTML = `${this.score}`) : null;
     this.player.update();
     this.gridOfInvaderGrid.forEach((invaderGrid) => {
       invaderGrid.update(this.frames);
     });
 
+    this.bombes.forEach((bombe, index) => {
+      if (checkCollision(bombe, this.player)) {
+        this.createParticles(
+          bombe.x,
+          bombe.y,
+          bombe.radius,
+          bombe.radius,
+          "yellow"
+        );
+        this.bombes.splice(index, 1);
+        this.gameOver();
+      } else {
+        bombe.update();
+      }
+    });
+
     if (this.frames % this.randomInterval === 0) {
       this.gridOfInvaderGrid.push(new InvaderGrid(this));
       this.randomInterval = Math.floor(Math.random() * 500) + 500;
+      this.bombes.push(
+        new Bombe(
+          this,
+          Math.floor(Math.random() * this.width),
+          Math.floor(Math.random() * this.height),
+          Math.floor(Math.random() * (30 - 20 + 1) + 20),
+          Math.floor(Math.random() * (5 - 2 + 1) + 2)
+        )
+      );
       this.frames = 0;
     }
-
     this.frames++;
   }
 
   draw(context: CanvasRenderingContext2D) {
-    this.particles.forEach((particle) => {
-      particle.draw(context);
-    });
-    if (this.gameOver) return;
+    this.particles.forEach((particle) => particle.draw(context));
+    if (this.gameDone) return;
     this.player.draw(context);
-    this.gridOfInvaderGrid.forEach((invaderGrid) => {
-      invaderGrid.draw(context);
-    });
+    this.gridOfInvaderGrid.forEach((invaderGrid) => invaderGrid.draw(context));
+    this.bombes.forEach((bombe) => bombe.draw(context));
   }
 }
 

@@ -6,7 +6,7 @@ class Particle {
   public radius: number;
   private color: string;
   public opacity: number;
-  private fades: boolean;
+  public fades: boolean;
 
   constructor(
     x: number,

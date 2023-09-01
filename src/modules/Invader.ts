@@ -34,15 +34,7 @@ class Invader {
 
     this.projectiles.forEach((projectile, index) => {
       if (checkCollision(projectile, this.game.player)) {
-        this.game.createParticles(
-          this.game.player.x,
-          this.game.player.y,
-          this.game.player.width,
-          this.game.player.height,
-          "white"
-        );
-        this.game.player.opacity = 0;
-        setTimeout(() => (this.game.gameOver = true), 5000);
+        this.game.gameOver();
       }
       if (projectile.markedDeletion()) {
         this.projectiles.splice(index, 1);
