@@ -17,6 +17,17 @@ class Bombe {
     this.speedY = -speed;
   }
 
+  explosion(index: number) {
+    this.game.createParticles(
+      this.x,
+      this.y,
+      this.radius,
+      this.radius,
+      "yellow"
+    );
+    this.game.bombes.splice(index, 1);
+  }
+
   update() {
     if (this.x <= 0 || this.x + this.radius >= this.game.width) {
       this.speedX = -this.speedX;

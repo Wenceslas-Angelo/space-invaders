@@ -28,6 +28,18 @@ class Invader {
     this.game = game;
   }
 
+  dead(invader: this, projectileIndex: number) {
+    this.game.score += 10;
+    this.game.createParticles(
+      invader.x,
+      invader.y,
+      invader.width,
+      invader.height,
+      "white"
+    );
+    this.game.player.getProjectiles().splice(projectileIndex, 1);
+  }
+
   update(speedX: number, speedY: number) {
     this.x += speedX;
     this.y += speedY;

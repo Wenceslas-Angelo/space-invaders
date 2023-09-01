@@ -4,6 +4,7 @@ import Player from "./Player";
 import Particle from "./Particle";
 import Bombe from "./Bombe";
 import checkCollision, { twoCircleIsCollide } from "../utils/checkCollision";
+
 class Game {
   width: number;
   height: number;
@@ -86,20 +87,34 @@ class Game {
     setTimeout(() => (this.gameDone = true), 5000);
   }
 
-  update() {
+  updateParticles() {
     this.particles.forEach((particle, index) => {
+      if (particle.y - particle.radius >= this.height && !particle.fades) {
+        particle.x = Math.random() * this.width;
+        particle.y = 0;
+      }
       if (particle.opacity <= 0) {
         this.particles.splice(index, 1);
       } else {
         particle.update();
       }
     });
-    this.particles.forEach((particle) => {
-      if (particle.y - particle.radius >= this.height && !particle.fades) {
-        particle.x = Math.random() * this.width;
-        particle.y = 0;
-      }
-    });
+  }
+
+  createBombe() {
+    this.bombes.push(
+      new Bombe(
+        this,
+        Math.floor(Math.random() * this.width),
+        Math.floor(Math.random() * this.height),
+        Math.floor(Math.random() * (30 - 20 + 1) + 20),
+        Math.floor(Math.random() * (5 - 2 + 1) + 2)
+      )
+    );
+  }
+
+  update() {
+    this.updateParticles();
     if (this.gameDone) return;
     this.HtmlElScore ? (this.HtmlElScore.innerHTML = `${this.score}`) : null;
     this.player.update();
@@ -110,27 +125,14 @@ class Game {
     this.bombes.forEach((bombe, index) => {
       this.player.getProjectiles().forEach((projectile, projectileIndex) => {
         if (twoCircleIsCollide(projectile, bombe)) {
-          this.createParticles(
-            bombe.x,
-            bombe.y,
-            bombe.radius,
-            bombe.radius,
-            "yellow"
-          );
-          this.bombes.splice(index, 1);
+          bombe.explosion(index);
           this.player.getProjectiles().splice(projectileIndex, 1);
-          this.score += 10;
+          this.score += 1;
         }
       });
+
       if (checkCollision(bombe, this.player)) {
-        this.createParticles(
-          bombe.x,
-          bombe.y,
-          bombe.radius,
-          bombe.radius,
-          "yellow"
-        );
-        this.bombes.splice(index, 1);
+        bombe.explosion(index);
         this.gameOver();
       } else {
         bombe.update();
@@ -140,15 +142,7 @@ class Game {
     if (this.frames % this.randomInterval === 0) {
       this.gridOfInvaderGrid.push(new InvaderGrid(this));
       this.randomInterval = Math.floor(Math.random() * 500) + 500;
-      this.bombes.push(
-        new Bombe(
-          this,
-          Math.floor(Math.random() * this.width),
-          Math.floor(Math.random() * this.height),
-          Math.floor(Math.random() * (30 - 20 + 1) + 20),
-          Math.floor(Math.random() * (5 - 2 + 1) + 2)
-        )
-      );
+      this.createBombe();
       this.frames = 0;
     }
     this.frames++;
