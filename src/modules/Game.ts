@@ -24,8 +24,11 @@ class Game {
   lastSpawnGridTime: number;
   bgMusic: HTMLAudioElement;
   gameOverMusic: HTMLAudioElement;
+  start: boolean;
+  gameScreen: HTMLElement | null;
 
   constructor(width: number, height: number) {
+    this.start = false;
     this.width = width;
     this.height = height;
     this.player = new Player(this);
@@ -41,6 +44,7 @@ class Game {
     this.particles = [];
     this.createBgStar();
     this.HtmlElScore = document.querySelector("h1 span");
+    this.gameScreen = document.querySelector(".screen");
     this.score = 0;
     this.bombes = [];
     this.bgMusic = new Audio(backgroundMusic);
@@ -50,7 +54,7 @@ class Game {
   }
 
   createBgStar() {
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 50; i++) {
       this.particles.push(
         new Particle(
           Math.random() * this.width,
@@ -72,7 +76,7 @@ class Game {
     height: number,
     color: string
   ) {
-    for (let i = 0; i < 50; i++) {
+    for (let i = 0; i < 20; i++) {
       this.particles.push(
         new Particle(
           x + width / 2,
@@ -96,7 +100,11 @@ class Game {
       "white"
     );
     this.player.opacity = 0;
-    setTimeout(() => (this.gameDone = true), 5000);
+    setTimeout(() => {
+      this.gameDone = true;
+      this.start = false;
+      this.gameScreen?.classList.remove("hidden");
+    }, 2000);
     this.bgMusic.pause();
     this.bgMusic.currentTime = 0;
     this.gameOverMusic.play();
@@ -147,8 +155,11 @@ class Game {
 
   update(deltaTime: number) {
     this.updateParticles();
-    if (this.gameDone) return;
-    this.HtmlElScore ? (this.HtmlElScore.innerHTML = `${this.score}`) : null;
+    if (this.gameDone || !this.start) return;
+
+    this.HtmlElScore
+      ? (this.HtmlElScore.innerHTML = `Score: ${this.score}`)
+      : null;
     this.player.update();
     this.gridOfInvaderGrid.forEach((invaderGrid) => {
       invaderGrid.update(deltaTime);
@@ -168,7 +179,7 @@ class Game {
 
   draw(context: CanvasRenderingContext2D) {
     this.particles.forEach((particle) => particle.draw(context));
-    if (this.gameDone) return;
+    if (this.gameDone || !this.start) return;
     this.player.draw(context);
     this.gridOfInvaderGrid.forEach((invaderGrid) => invaderGrid.draw(context));
     this.bombes.forEach((bombe) => bombe.draw(context));
