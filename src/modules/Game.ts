@@ -113,9 +113,10 @@ class Game {
     );
   }
 
-  update() {
+  update(deltaTime: number) {
     this.updateParticles();
     if (this.gameDone) return;
+    console.log(deltaTime);
     this.HtmlElScore ? (this.HtmlElScore.innerHTML = `${this.score}`) : null;
     this.player.update();
     this.gridOfInvaderGrid.forEach((invaderGrid) => {
