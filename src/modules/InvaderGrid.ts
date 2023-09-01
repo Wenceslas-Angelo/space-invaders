@@ -10,6 +10,7 @@ class InvaderGrid {
   private x: number;
   private y: number;
   private width: number;
+  private elapsedShootTime: number;
 
   constructor(game: Game) {
     this.game = game;
@@ -23,6 +24,7 @@ class InvaderGrid {
     const columns = Math.floor(Math.random() * 10 + 5);
     this.width = columns * space;
     this.createInvaders(columns, rows, space);
+    this.elapsedShootTime = 0;
   }
 
   createInvaders(columns: number, rows: number, space: number) {
@@ -52,7 +54,7 @@ class InvaderGrid {
     }
   }
 
-  update(frames: number) {
+  update(deltaTime: number) {
     // Move grid invaders
     this.speedY = 0;
     if (this.x + this.width >= this.game.width || this.x <= 0) {
@@ -61,12 +63,13 @@ class InvaderGrid {
     }
     this.x += this.speedX;
     this.y += this.speedY;
-
     // invader shoot
-    if (frames % 100 === 0 && this.invaders.length > 0) {
+    if (this.elapsedShootTime >= 3000 && this.invaders.length > 0) {
       const randomIndex = Math.floor(Math.random() * this.invaders.length);
       this.invaders[randomIndex].shoot();
+      this.elapsedShootTime = 0;
     }
+    this.elapsedShootTime += deltaTime;
 
     // Update or delete invader
     this.invaders.forEach((invader, invaderIndex) => {

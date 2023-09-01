@@ -12,13 +12,14 @@ class Game {
   keys: string[];
   inputHandler: InputHandler;
   gridOfInvaderGrid: InvaderGrid[];
-  frames: number;
   randomInterval: number;
   gameDone: boolean;
   particles: Particle[];
   HtmlElScore: HTMLElement | null;
   score: number;
   bombes: Bombe[];
+  elapsedGridTime: number;
+  lastSpawnGridTime: number;
 
   constructor(width: number, height: number) {
     this.width = width;
@@ -26,9 +27,12 @@ class Game {
     this.player = new Player(this);
     this.keys = [];
     this.inputHandler = new InputHandler(this);
-    this.gridOfInvaderGrid = [];
-    this.frames = 0;
-    this.randomInterval = Math.floor(Math.random() * 500) + 500;
+    this.gridOfInvaderGrid = [new InvaderGrid(this)];
+    this.elapsedGridTime = 0;
+    this.lastSpawnGridTime = 0;
+    this.randomInterval = Math.floor(
+      Math.random() * (20000 - 10000 + 1) + 10000
+    );
     this.gameDone = false;
     this.particles = [];
     this.createBgStar();
@@ -116,14 +120,15 @@ class Game {
   updateBombes() {
     this.bombes.forEach((bombe, index) => {
       bombe.update();
+      if (checkCollision(bombe, this.player)) {
+        bombe.explosion(index);
+        this.gameOver();
+      }
       this.player.getProjectiles().forEach((projectile, projectileIndex) => {
         if (twoCircleIsCollide(projectile, bombe)) {
           bombe.explosion(index);
           this.player.getProjectiles().splice(projectileIndex, 1);
           this.score += 1;
-        } else if (checkCollision(bombe, this.player)) {
-          bombe.explosion(index);
-          this.gameOver();
         }
       });
     });
@@ -132,22 +137,22 @@ class Game {
   update(deltaTime: number) {
     this.updateParticles();
     if (this.gameDone) return;
-    console.log(deltaTime);
     this.HtmlElScore ? (this.HtmlElScore.innerHTML = `${this.score}`) : null;
     this.player.update();
     this.gridOfInvaderGrid.forEach((invaderGrid) => {
-      invaderGrid.update(this.frames);
+      invaderGrid.update(deltaTime);
     });
 
     this.updateBombes();
 
-    if (this.frames % this.randomInterval === 0) {
+    if (this.elapsedGridTime >= this.randomInterval) {
       this.gridOfInvaderGrid.push(new InvaderGrid(this));
-      this.randomInterval = Math.floor(Math.random() * 500) + 500;
+      this.randomInterval =
+        Math.floor(Math.random() * (20000 - 10000 + 1)) + 10000;
       this.createBombe();
-      this.frames = 0;
+      this.elapsedGridTime = 0;
     }
-    this.frames++;
+    this.elapsedGridTime += deltaTime;
   }
 
   draw(context: CanvasRenderingContext2D) {
