@@ -3,8 +3,7 @@ import InvaderGrid from "./InvaderGrid";
 import Player from "./Player";
 import Particle from "./Particle";
 import Bombe from "./Bombe";
-import checkCollision from "../utils/checkCollision";
-
+import checkCollision, { twoCircleIsCollide } from "../utils/checkCollision";
 class Game {
   width: number;
   height: number;
@@ -109,6 +108,20 @@ class Game {
     });
 
     this.bombes.forEach((bombe, index) => {
+      this.player.getProjectiles().forEach((projectile, projectileIndex) => {
+        if (twoCircleIsCollide(projectile, bombe)) {
+          this.createParticles(
+            bombe.x,
+            bombe.y,
+            bombe.radius,
+            bombe.radius,
+            "yellow"
+          );
+          this.bombes.splice(index, 1);
+          this.player.getProjectiles().splice(projectileIndex, 1);
+          this.score += 10;
+        }
+      });
       if (checkCollision(bombe, this.player)) {
         this.createParticles(
           bombe.x,
